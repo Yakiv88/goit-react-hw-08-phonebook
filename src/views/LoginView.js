@@ -1,55 +1,55 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import authOperations from "../redux/auth/auth-operations";
-import { toast } from "react-toastify";
-import authSelectors from "../redux/auth/auth-selectors";
-import { useEffect } from "react";
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import authOperations from '../redux/auth/auth-operations'
+import { toast } from 'react-toastify'
+import authSelectors from '../redux/auth/auth-selectors'
+import { useEffect } from 'react'
+import * as React from 'react'
+import Avatar from '@mui/material/Avatar'
 
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Button from '@mui/material/Button'
+import CssBaseline from '@mui/material/CssBaseline'
+import TextField from '@mui/material/TextField'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import Box from '@mui/material/Box'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import Typography from '@mui/material/Typography'
+import Container from '@mui/material/Container'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 
-const theme = createTheme();
+const theme = createTheme()
 
 export default function LoginView() {
-  const dispatch = useDispatch();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const isLoggedIn = useSelector(authSelectors.getIsLoggedIn);
-  const errorLogIn = useSelector(authSelectors.getError);
+  const dispatch = useDispatch()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(null)
+  const isLoggedIn = useSelector(authSelectors.getIsLoggedIn)
+  const errorLogIn = useSelector(authSelectors.getError)
 
   useEffect(() => {
-    setError(errorLogIn);
-  }, [errorLogIn]);
+    setError(errorLogIn)
+  }, [errorLogIn])
 
   const handleChange = ({ target: { name, value } }) => {
     switch (name) {
-      case "email":
-        return setEmail(value);
-      case "password":
-        return setPassword(value);
+      case 'email':
+        return setEmail(value)
+      case 'password':
+        return setPassword(value)
       default:
-        return;
+        return
     }
-  };
+  }
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    dispatch(authOperations.logIn({ email, password }));
-    toast.success(`Congrats! You've just successfully signed in!`);
-    setEmail("");
-    setPassword("");
-  };
+    event.preventDefault()
+    dispatch(authOperations.logIn({ email, password }))
+    toast.success(`Congrats! You've just successfully signed in!`)
+    setEmail('')
+    setPassword('')
+  }
 
   return (
     !isLoggedIn && (
@@ -59,12 +59,12 @@ export default function LoginView() {
           <Box
             sx={{
               marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -118,5 +118,5 @@ export default function LoginView() {
         </Container>
       </ThemeProvider>
     )
-  );
+  )
 }

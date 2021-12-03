@@ -22,11 +22,6 @@ export default function RegisterView() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  // const [validLength, setValidLength] = useState(null);
-
-  // useEffect(() => {
-  //   setValidLength(password.length <= 8 ? true : false);
-  //   }, [password]);
 
   const handleChange = ({ target: { name, value } }) => {
     switch (name) {

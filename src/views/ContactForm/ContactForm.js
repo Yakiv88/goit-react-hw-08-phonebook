@@ -1,50 +1,50 @@
-import s from "./ContactForm.module.css";
-import Filter from "../Filter/Filter";
-import ContactList from "../ContactList/ContactList";
-import { useState } from "react";
-import operations from "../../redux/contacts/operations";
-import { useSelector, useDispatch } from "react-redux";
-import { getContacts } from "../../redux/contacts/selector";
-import { toast } from "react-toastify";
+import s from './ContactForm.module.css'
+import Filter from '../../Components/Filter/Filter'
+import ContactList from '../../Components/ContactList/ContactList'
+import { useState } from 'react'
+import operations from '../../redux/contacts/operations'
+import { useSelector, useDispatch } from 'react-redux'
+import { getContacts } from '../../redux/contacts/selector'
+import { toast } from 'react-toastify'
 
 function ContactForm() {
-  const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
-  const contacts = useSelector(getContacts);
-  const dispatch = useDispatch();
+  const [name, setName] = useState('')
+  const [number, setNumber] = useState('')
+  const contacts = useSelector(getContacts)
+  const dispatch = useDispatch()
 
   const inputChange = (evt) => {
     switch (evt.target.name) {
-      case "name":
-        setName(evt.target.value);
-        break;
+      case 'name':
+        setName(evt.target.value)
+        break
 
-      case "number":
-        setNumber(evt.target.value);
-        break;
+      case 'number':
+        setNumber(evt.target.value)
+        break
       default:
-        return;
+        return
     }
-  };
+  }
 
   const handleSubmit = (evt) => {
-    evt.preventDefault();
+    evt.preventDefault()
     if (
       contacts.find(
-        (contact) => contact.name.toLowerCase() === name.toLowerCase()
+        (contact) => contact.name.toLowerCase() === name.toLowerCase(),
       )
     ) {
-      return alert("This contact has already been added to the list");
+      return alert('This contact has already been added to the list')
     }
-    dispatch(operations.addContacts({ name, number }));
-    toast.success(`Contact ${name} has been added to the list~`);
-    resetForm();
-  };
+    dispatch(operations.addContacts({ name, number }))
+    toast.success(`Contact ${name} has been added to the list~`)
+    resetForm()
+  }
 
   const resetForm = () => {
-    setName("");
-    setNumber("");
-  };
+    setName('')
+    setNumber('')
+  }
 
   return (
     <>
@@ -88,7 +88,7 @@ function ContactForm() {
         <ContactList />
       </div>
     </>
-  );
+  )
 }
 
-export default ContactForm;
+export default ContactForm

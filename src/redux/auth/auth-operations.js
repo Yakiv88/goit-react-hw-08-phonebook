@@ -1,93 +1,78 @@
-import axios from "axios";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
+import axios from 'axios'
+import { createAsyncThunk } from '@reduxjs/toolkit'
+import { toast } from 'react-toastify'
 
-axios.defaults.baseURL = "https://connections-api.herokuapp.com";
-
-const BASE_USER_URL = `https://connections-api.herokuapp.com`;
-const userLogout = "/users/logout";
+axios.defaults.baseURL = 'https://connections-api.herokuapp.com'
 
 const token = {
   set(token) {
-    axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+    axios.defaults.headers.common.Authorization = `Bearer ${token}`
   },
   unset() {
-    axios.defaults.headers.common.Authorization = "";
+    axios.defaults.headers.common.Authorization = ''
   },
-};
+}
 
 const register = createAsyncThunk(
-  "auth/register",
+  'auth/register',
   async (credentials, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post("/users/signup", credentials);
-      token.set(data.token);
-      return data;
+      const { data } = await axios.post('/users/signup', credentials)
+      token.set(data.token)
+      return data
     } catch (error) {
-      rejectWithValue(toast.error(`Oops! Try again please!`));
+      rejectWithValue(toast.error(`Oops! Try again please!`))
+      throw new Error({ message: 'error' })
     }
-  }
-);
+  },
+)
 
 const logIn = createAsyncThunk(
-  "auth/login",
+  'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post("/users/login", credentials);
-      token.set(data.token);
-      return data;
+      const { data } = await axios.post('/users/login', credentials)
+      token.set(data.token)
+      return data
     } catch (error) {
-      rejectWithValue(toast.error(`Oops! Try again please!`));
+      rejectWithValue(toast.error(`Oops! Try again please!`))
+      throw new Error({ message: 'error' })
     }
-  }
-);
+  },
+)
 
-export const logOut = createAsyncThunk(
-  "users/logout",
-  async (_, { rejectWithValue, getState }) => {
-    const state = getState();
-    const token = state.auth.token;
-    if (!token) return;
-    try {
-      const response = await fetch(BASE_USER_URL + userLogout, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-
-      return data;
-    } catch (err) {
-      console.log(err.message);
-      rejectWithValue(err.message);
-    }
+const logOut = createAsyncThunk('auth/logout', async () => {
+  try {
+    await axios.post('/users/logout')
+    token.unset()
+  } catch (error) {
+    return console.log('error on logOut', error)
   }
-);
+})
 
 const refreshCurrentUser = createAsyncThunk(
-  "auth/refresh",
-  async (_, thunkAPI, { rejectWithValue }) => {
-    const state = thunkAPI.getState();
-    const persistedToken = state.auth.token;
+  'auth/refresh',
+  async (_, thunkAPI) => {
+    const state = thunkAPI.getState()
+    const persistedToken = state.auth.token
     if (persistedToken === null) {
-      return thunkAPI.rejectWithValue();
+      return thunkAPI.rejectWithValue()
     }
-    token.set(persistedToken);
+    token.set(persistedToken)
     try {
-      const { data } = await axios.get("/users/current");
-      return data;
+      const { data } = await axios.get('/users/current')
+      return data
     } catch (error) {
-      rejectWithValue(error.message);
+      return console.log('error on refresh', error)
     }
-  }
-);
+  },
+)
 
 const authOperations = {
   register,
   logIn,
   logOut,
   refreshCurrentUser,
-};
+}
 
-export default authOperations;
+export default authOperations

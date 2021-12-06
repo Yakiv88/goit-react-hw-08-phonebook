@@ -21,8 +21,7 @@ const register = createAsyncThunk(
       token.set(data.token)
       return data
     } catch (error) {
-      rejectWithValue(toast.error(`Oops! Try again please!`))
-      throw new Error({ message: 'error' })
+      rejectWithValue(toast.error(`Try again please!`))
     }
   },
 )
@@ -35,20 +34,23 @@ const logIn = createAsyncThunk(
       token.set(data.token)
       return data
     } catch (error) {
-      rejectWithValue(toast.error(`Oops! Try again please!`))
-      throw new Error({ message: 'error' })
+      rejectWithValue(toast.error(`Try again please!`))
     }
   },
 )
 
-const logOut = createAsyncThunk('auth/logout', async () => {
-  try {
-    await axios.post('/users/logout')
-    token.unset()
-  } catch (error) {
-    return console.log('error on logOut', error)
-  }
-})
+const logOut = createAsyncThunk(
+  'auth/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      await axios.post('/users/logout')
+      token.unset()
+    } catch (error) {
+      return rejectWithValue(error.message)
+      // return console.log('error on logOut', error)
+    }
+  },
+)
 
 const refreshCurrentUser = createAsyncThunk(
   'auth/refresh',
@@ -63,7 +65,7 @@ const refreshCurrentUser = createAsyncThunk(
       const { data } = await axios.get('/users/current')
       return data
     } catch (error) {
-      return console.log('error on refresh', error)
+      return thunkAPI.rejectWithValue(error.message)
     }
   },
 )
